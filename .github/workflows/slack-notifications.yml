@@ -1,0 +1,28 @@
+name: Github Notifications to Slack
+on: 
+    pull_request:
+        types: [opened]
+jobs:
+    notify:
+        name: Notify on Slack
+        runs-on: ubuntu-latest
+        # needs: [build]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Notify
+              uses: rtCamp/action-slack-notify@v2
+              with:
+                  status: 'success'
+                  text: 'New Pull Request Opened'
+                  author_name: ${{ github.actor }}
+                  author_icon: ${{ github.actor }}
+                  title: ${{ github.event.pull_request.title }}
+                  title_link: ${{ github.event.pull_request.html_url }}
+                  color: '#0000ff'
+                  footer: 'Github Notifications'
+                  footer_icon: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+                  ts: ${{ github.event.pull_request.created_at }}
+                  fields: '[]'
+              env:
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
